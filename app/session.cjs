@@ -52,11 +52,18 @@ function createSession({ groq, store, captureTarget, deliver, emit, command }) {
       const key = store.getKey();
       const raw = await groq.transcribe(input.bytes, input.mime, key, input.settings, signal);
       if (!current(id)) return;
+      // Keep Whisper recoverable before any optional AI or clipboard operation.
+      publish({ result: { id, text: raw, raw, cleaned: false, time: Date.now(),
+        pasted: false, copied: false, message: 'Hasil Whisper tersedia. Salin teks jika diperlukan.' } });
       let text = raw;
       let warning = '';
       if (input.settings.cleanup) {
         publish({ phase: 'cleaning' });
-        try { text = await polish(raw, key, signal); }
+        try {
+          const polished = await polish(raw, key, signal);
+          if (typeof polished !== 'string' || !polished.trim()) throw new Error('Hasil polishing kosong.');
+          text = polished;
+        }
         catch (error) {
           if (signal.aborted) return;
           warning = `Perapian teks gagal. Hasil transkripsi asli tetap digunakan. ${error.message}`;

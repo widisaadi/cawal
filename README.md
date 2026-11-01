@@ -10,7 +10,7 @@ Cawal transcribes your voice and pastes the result into the app you're using.
 Built for everyday Indonesian speech, with support for mixed English wording and tech terms.
 Powered by Groq. Bring your own API key.
 
-[**Download for Windows**](https://github.com/widisaadi/cangkem-virtual/releases/download/v1.7.2/Cawal-Setup-1.7.2.exe)
+[**Download for Windows**](https://github.com/widisaadi/cangkem-virtual/releases/download/v1.7.10/Cawal-Setup-1.7.10.exe)
 · [Releases](https://github.com/widisaadi/cangkem-virtual/releases)
 · [User guide](docs/usage.md)
 · [Report an issue](https://github.com/widisaadi/cangkem-virtual/issues)
@@ -28,7 +28,7 @@ Powered by Groq. Bring your own API key.
 
 Requires **Windows x64**, an internet connection, and a [Groq API key](https://console.groq.com/keys).
 
-1. Download and run `Cawal-Setup-1.7.2.exe` from [Releases](https://github.com/widisaadi/cangkem-virtual/releases/latest).
+1. Download and run `Cawal-Setup-1.7.10.exe` from [Releases](https://github.com/widisaadi/cangkem-virtual/releases/latest).
 2. Open Cawal and follow the setup to save your API key and choose a shortcut.
 3. Click a text field in any app. Press your shortcut, speak, then press it again.
 

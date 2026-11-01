@@ -4,6 +4,7 @@ import cawalIcon from '../resources/icon.png';
 import { busyPhases, labels, type Snapshot } from './types';
 
 function shortIssue(message: string, polishing: boolean) {
+  if (polishing) return 'Polishing gagal. Teks asli dipakai.';
   const text = message.toLowerCase();
   const reason = /limit/.test(text) ? 'Limit Groq tercapai'
     : /api key/.test(text) ? 'API key tidak valid'

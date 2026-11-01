@@ -46,6 +46,37 @@ test('AI failure still delivers original Whisper transcript', async () => {
   assert.equal(session.snapshot().phase, 'done');
 });
 
+test('Whisper is recoverable during polishing and survives cancellation', async () => {
+  const { session, deliveries, record } = setup({ groq: {
+    transcribe: async () => 'hasil Whisper jangan hilang', cleanup: () => new Promise(() => {}),
+  } });
+  const request = session.audio(await record(), new ArrayBuffer(2), 'audio/webm');
+  await new Promise(setImmediate);
+  assert.equal(session.snapshot().phase, 'cleaning');
+  assert.equal(session.snapshot().result.text, 'hasil Whisper jangan hilang');
+  session.cancel(); await request;
+  assert.equal(session.snapshot().result.text, 'hasil Whisper jangan hilang');
+  assert.equal(deliveries.length, 0);
+});
+
+test('empty AI output and failed paste never discard the Whisper result', async () => {
+  for (const output of ['', '  ', null, undefined]) {
+    const { session, record } = setup({
+      groq: { transcribe: async () => 'teks Whisper utuh', cleanup: async () => output },
+      deliver: async text => { assert.equal(text, 'teks Whisper utuh'); throw new Error('Clipboard unavailable'); },
+    });
+    await session.audio(await record(), new ArrayBuffer(2), 'audio/webm');
+    const state = session.snapshot();
+    assert.equal(state.phase, 'done');
+    assert.equal(state.result.text, 'teks Whisper utuh');
+    assert.equal(state.result.raw, 'teks Whisper utuh');
+    assert.equal(state.result.cleaned, false);
+    assert.equal(state.result.pasted, false);
+    assert.equal(state.result.copied, false);
+    assert.ok(state.warning);
+  }
+});
+
 test('stalled polishing delivers the original transcript after its deadline', async () => {
   const groq = createGroq(async (url, { signal }) => {
     if (url.endsWith('/audio/transcriptions')) return Response.json({ text: 'teks asli tetap aman' });

@@ -1,7 +1,7 @@
 {
   "name": "cawal",
   "productName": "Cawal",
-  "version": "1.7.9",
+  "version": "1.7.10",
   "description": "Cawal — Cangkem Virtual. Dictation simpel dengan Groq.",
   "main": "app/main.cjs",
   "private": true,
